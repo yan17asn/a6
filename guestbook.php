@@ -16,23 +16,23 @@ $username = "yan17asn";
 $password = "123456asd";
 $dbname = "yandb";
  
-// 创建连接
+// create connect
 $conn = new mysqli($servername, $username, $password, $dbname);
 // Check connection
 if ($conn->connect_error) {
-    die("连接失败: " . $conn->connect_error);
+    die("connect fail: " . $conn->connect_error);
 } 
  
 $sql = "SELECT _id, name, tel, email FROM A6";
 $result = $conn->query($sql);
  
 if ($result->num_rows > 0) {
-    // 输出数据
+    // output
     while($row = $result->fetch_assoc()) {
         echo "id: " . $row["_id"]. "Name: " . $row["name"]. "tel: " . $row["tel"]. "email: " . $row["email"]."<br>";
     }
 } else {
-    echo "0 结果";
+    echo "0 result";
 }
 
     
