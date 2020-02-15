@@ -24,7 +24,7 @@
 require '../inc_0700/config_inc.php'; #provides configuration, pathing, error handling, db credentials 
  
 # SQL statement
-$sql = "select MuffinName, MuffinID, Price from test_Muffins";
+$sql = "select Title, SurveyID, Description from winter2020_surveys";
 
 #Fills <title> tag. If left empty will default to $PageTitle in config_inc.php  
 $config->titleTag = 'Muffins made with love & PHP in Seattle';
@@ -77,16 +77,16 @@ $result = mysqli_query(IDB::conn(),$sql) or die(trigger_error(mysqli_error(IDB::
 
 if(mysqli_num_rows($result) > 0)
 {#records exist - process
-	if($myPager->showTotal()==1){$itemz = "muffin";}else{$itemz = "muffins";}  //deal with plural
+	if($myPager->showTotal()==1){$itemz = "survey";}else{$itemz = "surveys";}  //deal with plural
     echo '<div align="center">We have ' . $myPager->showTotal() . ' ' . $itemz . '!</div>';
 	while($row = mysqli_fetch_assoc($result))
 	{# process each row
-         echo '<div align="center"><a href="' . VIRTUAL_PATH . 'demo/demo_view.php?id=' . (int)$row['MuffinID'] . '">' . dbOut($row['MuffinName']) . '</a>';
-         echo ' <i>only</i> <font color="red">$' . number_format((float)$row['Price'],2)  . '</font></div>';
+         echo '<div align="center"><a href="' . VIRTUAL_PATH . 'surveys/survey_view.php?id=' . (int)$row['SurveyID'] . '">' . dbOut($row['Title']) . '</a>';
+         echo '</div>';
 	}
 	echo $myPager->showNAV(); # show paging nav, only if enough records	 
 }else{#no records
-    echo "<div align=center>What! No muffins?  There must be a mistake!!</div>";	
+    echo "<div align=center>There are currently no surveys</div>";	
 }
 @mysqli_free_result($result);
 
