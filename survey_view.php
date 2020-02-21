@@ -1,13 +1,13 @@
 <?php
 /**
- * demo_view.php along with demo_list.php provides a sample web application
+ * survey_view.php along with index.php allow us to view surveys
  * 
- * @package nmListView
- * @author Bill Newman <williamnewman@gmail.com>
- * @version 2.10 2012/02/28
- * @link http://www.newmanix.com/
+* @package SurveySez
+ * @author weiyan rui <yan17asn@gmail.com>
+ * @version 1.0 2020/02/20
+ * @link http://www.example.com/
  * @license https://www.apache.org/licenses/LICENSE-2.0
- * @see demo_list.php
+ * @see index.php
  * @todo none
  */
 
@@ -17,12 +17,12 @@ require '../inc_0700/config_inc.php'; #provides configuration, pathing, error ha
 # check variable of item passed in - if invalid data, forcibly redirect back to demo_list.php page
 if(isset($_GET['id']) && (int)$_GET['id'] > 0){#proper data must be on querystring
 	 $myID = (int)$_GET['id']; #Convert to integer, will equate to zero if fails
-}else{
-	myRedirect(VIRTUAL_PATH . "demo/demo_list.php");
+}else{//send user back to a safe place
+	myRedirect(VIRTUAL_PATH . "surveys/index.php");
 }
 
 //sql statement to select individual item
-$sql = "select MuffinName,Description,MetaDescription,MetaKeywords,Price from test_Muffins where MuffinID = " . $myID;
+$sql = "select Title,Description,DateAdded from winter2020_surveys where SurveyID = " . $myID;
 //---end config area --------------------------------------------------
 
 $foundRecord = FALSE; # Will change to true, if record found!
@@ -35,22 +35,17 @@ if(mysqli_num_rows($result) > 0)
 	   $foundRecord = TRUE;	
 	   while ($row = mysqli_fetch_assoc($result))
 	   {
-			$MuffinName = dbOut($row['MuffinName']);
+			$Title = dbOut($row['Title']);
 			$Description = dbOut($row['Description']);
-			$Price = (float)$row['Price'];
-			$MetaDescription = dbOut($row['MetaDescription']);
-			$MetaKeywords = dbOut($row['MetaKeywords']);
-	   }
+			$DateAdded = dbOut($row['DateAdded']);
+		}
 }
 
 @mysqli_free_result($result); # We're done with the data!
 
 if($foundRecord)
 {#only load data if record found
-	$config->titleTag = $MuffinName . " muffins made with PHP & love!"; #overwrite PageTitle with Muffin info!
-	#Fills <meta> tags.  Currently we're adding to the existing meta tags in config_inc.php
-	$config->metaDescription = $MetaDescription . ' Seattle Central\'s ITC280 Class Muffins are made with pure PHP! ' . $config->metaDescription;
-	$config->metaKeywords = $MetaKeywords . ',Muffins,PHP,Fun,Bran,Regular,Regular Expressions,'. $config->metaKeywords;
+	$config->titleTag = $Title . "survey"; #overwrite PageTitle with survey info!
 }
 /*
 $config->metaDescription = 'Web Database ITC281 class website.'; #Fills <meta> tags.
@@ -67,39 +62,23 @@ $config->nav1 = array("page.php"=>"New Page!") + $config->nav1; #add a new page 
 # END CONFIG AREA ---------------------------------------------------------- 
 
 get_header(); #defaults to theme header or header_inc.php
-?>
-<h3 align="center"><?=smartTitle();?></h3>
 
-<p>This page, along with <b>demo_list.php</b>, demonstrate a List/View web application.</p>
-<p>It was built on the mysqli shared web application page, <b>demo_shared.php</b></p>
-<p>This page is to be used only with <b>demo_list.php</b>, and is <b>NOT</b> the entry point of the application, meaning this page gets <b>NO</b> link on your web site.</p>
-<p>Use <b>demo_list.php</b> and <b>demo_view.php</b> as a starting point for building your own List/View web application!</p> 
-<?php
+//echo'<h1 align="center">' . $Title . '</h1>';
+
+//' . xxx . '
+
 if($foundRecord)
-{#records exist - show muffin!
-?>
-	<h3 align="center">A Yummy <?=$MuffinName;?> Muffin!</h3>
-	<div align="center"><a href="<?=VIRTUAL_PATH;?>demo/demo_list.php">More Muffins?!?</a></div>
-	<table align="center">
-		<tr>
-			<td><img src="<?=VIRTUAL_PATH;?>upload/m<?=$myID;?>.jpg" /></td>
-			<td>We make fresh <?=$MuffinName;?> muffins daily!</td>
-		</tr>
-		<tr>
-			<td colspan="2">
-				<blockquote><?=$Description;?></blockquote>
-			</td>
-		</tr>
-		<tr>
-			<td align="center" colspan="2">
-				<h3><i>ONLY!!:</i> <font color="red">$<?=number_format($Price,2);?></font></h3>
-			</td>
-		</tr>
-	</table>
-<?
-}else{//no such muffin!
-    echo '<div align="center">What! No such muffin? There must be a mistake!!</div>';
-    echo '<div align="center"><a href="' . VIRTUAL_PATH . 'demo/demo_list.php">Another Muffin?</a></div>';
+{#records exist - show survey!
+
+	echo'
+	   <h1 align="center">' . $Title . '</h1>
+		<h3>' . $Title . '</h3>
+		<p>' . $Description . '</p>
+		<p>Date Added: ' . $DateAdded . '</p>
+	';
+}else{//no such survey!
+    echo '<h2 align="center">There is no such survey</h2>';
+    echo '<div align="center"><a href="' . VIRTUAL_PATH . 'surveys/index.php">Surveys</a></div>';
 }
 
 get_footer(); #defaults to theme footer or footer_inc.php
